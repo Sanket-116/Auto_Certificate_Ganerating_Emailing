@@ -54,7 +54,7 @@ def send_email(to_address, subject, body, attachment_path):
 
     #sender details
     sender_email = "sanketmaske16@gmail.com"
-    sender_password = "iavrzaungzqcagrq"  # Used App Password here
+    sender_password = "0iavrzaungzqcagrq"  # Used App Password here
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
