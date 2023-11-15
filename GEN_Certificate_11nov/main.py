@@ -1,6 +1,6 @@
 import csv
 import io
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfWriter, PdfReader
 from reportlab.pdfgen import canvas
 import smtplib
 from email.mime.text import MIMEText
@@ -17,17 +17,17 @@ logging.basicConfig(level=logging.INFO)
 def generate_certificate(participant_name, participant_email, template_path):
 
     # create a new PDF with the participant's information
-    output = PdfFileWriter()
-    template = PdfFileReader(template_path)
-    page = template.getPage(0)  
+    output = PdfWriter()
+    template = PdfReader(template_path)
+    page = template.pages[0]
 
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
 
     #text co-ordinates on template
     text_color = 'black'
-    x = 230
-    y = 440  
+    x = 238
+    y = 455  
     font_size = 36
 
     can.setFont("Helvetica", font_size)
@@ -37,9 +37,9 @@ def generate_certificate(participant_name, participant_email, template_path):
     can.save()
 
     packet.seek(0)
-    new_pdf = PdfFileReader(packet)
-    page.merge_page(new_pdf.getPage(0))
-    output.addPage(page)
+    new_pdf = PdfReader(packet)
+    page.merge_page(new_pdf.pages[0])
+    output.add_page(page)
 
     # Save the certificate
     certificate_path = f"{participant_name}_certificate.pdf"
@@ -53,8 +53,8 @@ def generate_certificate(participant_name, participant_email, template_path):
 def send_email(to_address, subject, body, attachment_path):
 
     #sender details
-    sender_email = "sanketmaske16@gmail.com"
-    sender_password = "0000"  # Used App Password here
+    sender_email = "udictgdsc@gmail.com"
+    sender_password = "mubcypzgtboikeme"  # Used App Password here
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -102,7 +102,7 @@ with open('participants.csv', 'r') as file:
             print(f"\nCertificate generated for {participant_name}. Saved at {certificate_path}\n")
 
             #calling Email-send fun()
-            send_email(participant_email, "\nCertificate of Participation", f"Dear {participant_name},\n\nThank you for participating in our event. Attached is your certificate of participation.", certificate_path)
+            send_email(participant_email, f"Congratulations, {participant_name} on Completing Your GDSC Cloud Jam", f"Dear {participant_name},\n\nWe are delighted to extend our warmest congratulations to you for successfully completing your Google Cloud Jam.\nYour dedication and hard work have been truly commendable.\n\nBest regards,\nTeam, GDSC-UDICT", certificate_path)
 
         else:
             logging.warning(f"Skipping row {row}, as it doesn't have enough elements.")
